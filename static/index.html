@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>04-01-static-directory</title>
+    <script src="https://unpkg.com/maplibre-gl@^5.5.0/dist/maplibre-gl.js"></script>
+    <link
+      href="https://unpkg.com/maplibre-gl@^5.5.0/dist/maplibre-gl.css"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+      }
+      h1 {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="map" style="height: 100vh"></div>
+    <script>
+      // ベクトルタイルとラスタータイルのURL
+      const vectortile = window.location.origin + "/vector/{z}/{x}/{y}.pbf";
+      const rastertile = window.location.origin + "/raster/{z}/{x}/{y}.png";
+
+      const map = new maplibregl.Map({
+        hash: true,
+        container: "map",
+        style: {
+          version: 8,
+          sources: {
+            gsistd: {
+              type: "raster",
+              tiles: [
+                "https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png",
+              ],
+              tileSize: 256,
+              attribution: "地理院タイル",
+            },
+            vectortile: {
+              type: "vector",
+              tiles: [vectortile],
+              minzoom: 0,
+              attribution: "国土数値情報 - 学校データ",
+            },
+          },
+          layers: [
+            {
+              id: "gsistd",
+              type: "raster",
+              source: "gsistd",
+            },
+            {
+              id: "vectortile",
+              // type: "circle",
+              type: "fill",
+              source: "vectortile",
+              "source-layer": "vector",
+              paint: {
+                // "circle-color": "red",
+                "fill-color": "rgba(255, 0, 0, 0.5)",
+              },
+            },
+          ],
+        },
+      });
+    </script>
+  </body>
+</html>
